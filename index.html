@@ -4,7 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
     <title>MediBot</title>
   </head>
   <body>
@@ -19,64 +22,78 @@
           <img src="./assets/upload.png" class="upload-icon" />
           <span>Upload File</span>
         </label>
-    
+
         <!-- Hidden file input -->
         <input
           type="file"
           id="file-upload"
           accept=".pdf, .doc, .docx"
           style="display: none"
+          multiple
         />
-        <div class="divider"></div> <!-- Vertical line -->
+        <div class="divider"></div>
+        <!-- Vertical line -->
 
-        <div class="user-account">
+        <div class="user-account" id="user-account">
           <div class="user-avatar">J</div>
           <span class="user-name">John Doe</span>
+
+          <!-- Logout Menu -->
+          <div class="user-dropdown" id="user-dropdown">
+            <button id="logout-btn">Logout</button>
+          </div>
         </div>
       </div>
     </header>
 
     <main class="chatbot-body">
-        <div class="content-row">
-          <div class="text-box">
-            <h1 class="welcome-text">Welcome to Chatbot</h1>
-            <p class="selected-file">Selected file: <span id="selected-file-name" style="color: #4144f7;">None</span></p>
-          </div>
-          
-          <select id="file-dropdown" class="file-dropdown">
-            <option disabled selected>Select your file</option>
-            <!-- <option>File 1</option>
-            <option>File 2</option> -->
-          </select>
+      <div class="content-row">
+        <div class="text-box">
+          <h1 class="welcome-text">Welcome to Chatbot</h1>
+          <p class="selected-file">
+            Selected file:
+            <span id="selected-file-name" style="color: #4144f7">None</span>
+          </p>
         </div>
-      
-        <div class="bottom-border"></div>
 
-        <!-- Chat Container -->
-<div class="chat-wrapper">
-  <div class="chat-messages" id="chat-messages">
-    <p class="chat-placeholder" id="chat-placeholder">Your chats appear here once you start conversation.</p>
-  </div>
-</div>
+        <div class="dropdown-wrapper">
+          <select id="file-dropdown" class="file-dropdown">
+            <option value="" disabled selected>Select your file</option>
+            <!-- more options -->
+          </select>
+          <span class="dropdown-arrow"></span>
+        </div>
+      </div>
 
-<!-- Chat Input Area -->
-<div class="chat-input-area">
-  <div class="chat-input-wrapper">
-    <textarea id="chat-input" class="chat-input" placeholder="Type your message..."></textarea>
-    <button id="send-btn" class="send-btn">
-      <img src="./assets/send-icon.png" alt="Send" class="send-icon" />
-    </button>
-  </div>
-</div>
+      <div class="bottom-border"></div>
 
+      <!-- Chat Container -->
+      <div class="chat-wrapper" id="chat-wrapper">
+        <p class="chat-placeholder" id="chat-placeholder">
+          Your chats appear here once you start conversation.
+        </p>
+      </div>
 
-<!-- Footer -->
-<p class="footer-text">All Rights Reserved.</p>
-      </main>
-       
+      <!-- Chat Input Area -->
+      <div class="chat-input-area">
+        <div class="chat-input-wrapper">
+          <textarea
+            id="chat-input"
+            class="chat-input"
+            placeholder="Type your message..."
+          ></textarea>
+          <button id="send-btn" class="send-btn">
+            <img src="./assets/send-icon.png" alt="Send" class="send-icon" />
+          </button>
+        </div>
+      </div>
 
-      <!-- Toast container -->
-      <div id="toast" class="toast">File uploaded successfully</div>
+      <!-- Footer -->
+      <p class="footer-text">All Rights Reserved.</p>
+    </main>
+
+    <!-- Toast container -->
+    <div id="toast" class="toast">File uploaded successfully</div>
     <script src="script.js"></script>
   </body>
 </html>
