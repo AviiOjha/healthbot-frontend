@@ -38,70 +38,59 @@ function truncateFileName(filename, maxLength = 20) {
     : filename;
 }
 
+
+// Show Toast Message on uploading or re-uploading a file
+// function showToast(message) {
+//   toast.textContent = message;
+//   toast.classList.add('show');
+//   setTimeout(() => {
+//     toast.classList.remove('show');
+//   }, 3000);
+// }
+
+
 // File Upload Handler
 // fileInput.addEventListener('change', function () {
 //   if (this.files && this.files.length > 0) {
-//     const file = this.files[0];
+//     const newFiles = Array.from(this.files);
+//     const uploadedNames = [];
+//     const duplicateNames = [];
 
-//     if (!uploadedFiles.has(file.name)) {
-//       uploadedFiles.add(file.name);
+//     newFiles.forEach((file) => {
+//       if (!uploadedFiles.has(file.name)) {
+//         uploadedFiles.add(file.name);
 
-//       const option = document.createElement('option');
-//       option.value = file.name;
-//       option.textContent = truncateFileName(file.name);
-//       fileDropdown.appendChild(option);
+//         const option = document.createElement('option');
+//         option.value = file.name;
+//         option.textContent = truncateFileName(file.name);
+//         fileDropdown.appendChild(option);
 
-//       showToast(`File "${file.name}" uploaded successfully.`);
-//     } else {
-//       showToast(`File "${file.name}" already uploaded.`);
+//         uploadedNames.push(file.name);
+//       } else {
+//         duplicateNames.push(file.name);
+//       }
+//     });
+
+    // Show success toast message
+    // if (uploadedNames.length === 1) {
+    //   showToast(`"${uploadedNames[0]}" uploaded successfully.`);
+    // } else if (uploadedNames.length > 1) {
+      // selectedFileName.textContent = uploadedNames.join(', '); // No need because we don't want to show all the names in the selected files
+      // showToast(`${uploadedNames.length} Files Uploaded: ${uploadedNames.join(', ')}`);
+    //   showToast(`${uploadedNames.length} Files Uploaded Successfully.`);
+    // }
+
+    // Show duplicate toast message(separately)
+//     if (duplicateNames.length === 1) {
+//       showToast(`"${duplicateNames[0]}" already uploaded.`);
+//     } else if (duplicateNames.length > 1) {
+//       showToast(`${duplicateNames.length} files were already uploaded.`);
 //     }
 
-//     // Clear input to allow re-uploading the same file
+//     // Clear input to allow re-uploading same files
 //     this.value = '';
 //   }
 // });
-
-fileInput.addEventListener('change', function () {
-  if (this.files && this.files.length > 0) {
-    const newFiles = Array.from(this.files);
-    const uploadedNames = [];
-    const duplicateNames = [];
-
-    newFiles.forEach((file) => {
-      if (!uploadedFiles.has(file.name)) {
-        uploadedFiles.add(file.name);
-
-        const option = document.createElement('option');
-        option.value = file.name;
-        option.textContent = truncateFileName(file.name);
-        fileDropdown.appendChild(option);
-
-        uploadedNames.push(file.name);
-      } else {
-        duplicateNames.push(file.name);
-      }
-    });
-
-    // Show success toast message
-    if (uploadedNames.length === 1) {
-      showToast(`"${uploadedNames[0]}" uploaded successfully.`);
-    } else if (uploadedNames.length > 1) {
-      // selectedFileName.textContent = uploadedNames.join(', '); // No need because we don't want to show all the names in the selected files
-      // showToast(`${uploadedNames.length} Files Uploaded: ${uploadedNames.join(', ')}`);
-      showToast(`${uploadedNames.length} Files Uploaded Successfully.`);
-    }
-
-    // Show duplicate toast (separately)
-    if (duplicateNames.length === 1) {
-      showToast(`"${duplicateNames[0]}" already uploaded.`);
-    } else if (duplicateNames.length > 1) {
-      showToast(`${duplicateNames.length} files were already uploaded.`);
-    }
-
-    // Clear input to allow re-uploading same files
-    this.value = '';
-  }
-});
 
 
 // File Dropdown Change Handler
@@ -116,14 +105,6 @@ fileDropdown.addEventListener('blur', () => {
   dropdownWrapper.classList.remove('open');
 });
 
-// Show Toast Message on uploading or re-uploading a file
-function showToast(message) {
-  toast.textContent = message;
-  toast.classList.add('show');
-  setTimeout(() => {
-    toast.classList.remove('show');
-  }, 3000);
-}
 
 // Chat Input: Enter Keypress Handler
 chatInput.addEventListener('keydown', function (e) {

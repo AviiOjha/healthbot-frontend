@@ -1,99 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <title>MediBot</title>
-  </head>
-  <body>
-    <header class="header-container">
-      <div class="logo">
-        <img src="./assets/logo.jpg" alt="Chatbot Logo" class="logo-img" />
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Page</title>
+  <link rel="stylesheet" href="styles/loginstyles.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- Left side with image -->
+    <div class="left-side">
+      <img src="your-image.jpg" alt="Login Image" />
+    </div>
 
-      <div class="header-actions">
-        <!-- Upload button label -->
-        <label for="file-upload" class="upload-btn">
-          <img src="./assets/upload.png" class="upload-icon" />
-          <span>Upload File</span>
-        </label>
+    <!-- Right side with login form -->
+    <div class="right-side">
+      <div class="login-box">
+        <div class="logo">Your Logo</div>
 
-        <!-- Hidden file input -->
-        <input
-          type="file"
-          id="file-upload"
-          accept=".pdf, .doc, .docx"
-          style="display: none"
-          multiple
-        />
-        <div class="divider"></div>
-        <!-- Vertical line -->
+        <form id="login-form">
+          <label for="email">Email ID</label>
+          <input type="email" id="email" placeholder="Enter your email" required />
 
-        <div class="user-account" id="user-account">
-          <div class="user-avatar">J</div>
-          <span class="user-name">John Doe</span>
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password" required />
 
-          <!-- Logout Menu -->
-          <div class="user-dropdown" id="user-dropdown">
-            <button id="logout-btn">Logout</button>
+          <button type="submit" class="signin-btn">Sign In</button>
+
+          <div class="forgot-password">
+            <a href="#">Forgot password?</a>
           </div>
+        </form>
+
+        <div class="spacer"></div>
+
+        <div class="signup-section">
+          <span>Sign in for the first time?</span>
+          <button class="create-account">Create a New Account</button>
         </div>
       </div>
-    </header>
+    </div>
+  </div>
 
-    <main class="chatbot-body">
-      <div class="content-row">
-        <div class="text-box">
-          <h1 class="welcome-text">Welcome to Chatbot</h1>
-          <p class="selected-file">
-            Selected file:
-            <span id="selected-file-name" style="color: #4144f7">None</span>
-          </p>
-        </div>
-
-        <div class="dropdown-wrapper">
-          <select id="file-dropdown" class="file-dropdown">
-            <option value="" disabled selected>Select your file</option>
-            <!-- more options -->
-          </select>
-          <span class="dropdown-arrow"></span>
-        </div>
-      </div>
-
-      <div class="bottom-border"></div>
-
-      <!-- Chat Container -->
-      <div class="chat-wrapper" id="chat-wrapper">
-        <p class="chat-placeholder" id="chat-placeholder">
-          Your chats appear here once you start conversation.
-        </p>
-      </div>
-
-      <!-- Chat Input Area -->
-      <div class="chat-input-area">
-        <div class="chat-input-wrapper">
-          <textarea
-            id="chat-input"
-            class="chat-input"
-            placeholder="Type your message..."
-          ></textarea>
-          <button id="send-btn" class="send-btn">
-            <img src="./assets/send-icon.png" alt="Send" class="send-icon" />
-          </button>
-        </div>
-      </div>
-
-      <!-- Footer -->
-      <p class="footer-text">All Rights Reserved.</p>
-    </main>
-
-    <!-- Toast container -->
-    <div id="toast" class="toast">File uploaded successfully</div>
-    <script src="script.js"></script>
-  </body>
+  <script src="scripts/login.js"></script>
+</body>
 </html>
