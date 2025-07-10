@@ -72,6 +72,10 @@
             </select>
             <span class="dropdown-arrow"></span>
           </div>
+
+          <div class="dropdown-row-divider"></div>
+
+          <button id="clear-chat-btn" class="clear-chat-btn">Clear Chat</button>
         </div>
       </div>
 
@@ -104,6 +108,48 @@
 
     <!-- Toast container -->
     <div id="toast" class="toast">File uploaded successfully</div>
+
+
+    <!-- Custom Upload Modal -->
+<div id="upload-modal" class="modal-overlay">
+  <div class="modal-card">
+
+    <!-- Close Button -->
+    <button id="close-modal-btn" class="modal-close-btn">&times;</button>
+
+    <!-- Heading -->
+    <h2 class="modal-title">Upload Your File</h2>
+    <p class="modal-subtitle">Please select a group to enable file upload</p>
+
+    <!-- Group Dropdown -->
+    <div class="form-group">
+      <label for="group-select">Select Your Group</label>
+      <select id="group-select" class="group-dropdown">
+        <!-- Options will be loaded via JS -->
+      </select>
+    </div>
+
+    <!-- Drag Area -->
+    <div id="drop-zone" class="drop-zone">
+      Drag and drop your file here
+    </div>
+    <p class="file-info-text">
+      Maximum file size: 20 MB | Supported file type: .pdf, .doc
+    </p>
+
+    <!-- Upload Button -->
+    <button id="upload-file-btn" class="modal-upload-btn" disabled>
+      Upload File
+    </button>
+
+  </div>
+</div>
+
+
+
+
+
+    <!-- Javascript file integration -->
     <script src="scripts/home.js"></script>
   </body>
 </html>

@@ -118,13 +118,14 @@
   /* Main Content */
   .chatbot-body {
     position: relative;
-    min-height: 100vh; /* adjust for header height */
-    background: url('./assets/background.png') no-repeat center center/cover;
+    min-height: calc(100vh - 70px);
+     /* adjust for header height */
+    background: url('../assets/background.png') no-repeat center center/cover;
     padding: 40px;
     color: #fff;  
     /* display: flex;
   flex-direction: column; */
-  /* height: calc(100vh - 80px);  */
+  /* height: calc(100vh - 60px);  */
   /* 80px accounts for header */
   } 
   
@@ -191,6 +192,33 @@
     transition: border-radius 0.3s ease;
   }
 
+  .dropdown-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .dropdown-row-divider {
+    width: 1px;
+    height: 32px;
+    background-color: #007bff; /* theme color */
+    margin: 0 10px;
+  }
+
+  .clear-chat-btn {
+    background: #3244DB 0% 0% no-repeat padding-box;
+    padding: 12px;
+    color: #ffffff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    box-shadow: 0px 0px 100px #000014;
+    border: none;
+    border-radius: 6px;
+    opacity: 1;
+  }
+
   .dropdown-wrapper {
     position: relative;
     display: inline-block;
@@ -202,7 +230,7 @@
     right: 12px;
     width: 12px;
     height: 12px;
-    background-image: url('assets/user-icon.png'); /* or use CSS shape */
+    background-image: url('../assets/user-icon.png'); /* or use CSS shape */
     background-size: contain;
     background-repeat: no-repeat;
     transform: translateY(-50%);
@@ -236,7 +264,7 @@
   /* Wrapper to contain only the scrollable chat messages */
   .chat-wrapper {
     flex: 1;
-    height: calc(100vh - 310px); /* Adjust based on other layout */
+    height: calc(100% - 310px); /* Adjust based on other layout */
     overflow-y: auto;
     padding: 16px;
     display: flex;
@@ -462,3 +490,123 @@
     opacity: 1;
     transform: translateY(0);
   }
+
+
+
+
+  /* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(6px);
+  background-color: rgba(0, 0, 0, 0.4);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  font-family: 'Raleway', sans-serif;
+}
+
+/* Modal Card */
+.modal-card {
+  position: relative;
+  background: white;
+  padding: 32px;
+  width: 480px;
+  max-width: 90%;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Close Button */
+.modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #eee;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #333;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-title {
+  margin-top: 12px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #222;
+}
+
+.modal-subtitle {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 24px;
+}
+
+/* Form Group */
+.form-group {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #333;
+}
+
+.group-dropdown {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* Drop Zone */
+.drop-zone {
+  border: 2px dashed #aaa;
+  border-radius: 10px;
+  padding: 24px;
+  font-size: 15px;
+  color: #777;
+  background-color: #f9f9f9;
+  margin-bottom: 8px;
+}
+
+.file-info-text {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Upload Button */
+.modal-upload-btn {
+  padding: 10px 18px;
+  background-color: #ccc;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: not-allowed;
+  transition: background-color 0.3s ease;
+}
+
+.modal-upload-btn.active {
+  background-color: #007bff;
+  cursor: pointer;
+}

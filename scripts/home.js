@@ -1,9 +1,11 @@
 // DOM Elements
-const fileInput = document.getElementById('file-upload');
+// const fileInput = document.getElementById('file-upload');
 const fileDropdown = document.getElementById('file-dropdown');
+const secondaryDropdown = document.getElementById('secondary-dropdown')
 const selectedFileName = document.getElementById('selected-file-name');
 const toast = document.getElementById('toast');
 const scrollBtn = document.getElementById('scroll-to-bottom');
+const clearChatBtn = document.getElementById('clear-chat-btn');
 
 const chatWrapper = document.getElementById('chat-wrapper');
 const chatInput = document.getElementById('chat-input');
@@ -96,13 +98,28 @@ function truncateFileName(filename, maxLength = 20) {
 // File Dropdown Change Handler
 fileDropdown.addEventListener('change', function () {
   selectedFileName.textContent = this.value;
+  const wrapper = e.target.closest('.dropdown-wrapper');
+  wrapper.classList.remove('open');
 });
 
-fileDropdown.addEventListener('focus', () => {
-  dropdownWrapper.classList.add('open'); 
+fileDropdown.addEventListener('focus', (e) => {
+  const wrapper = e.target.closest('.dropdown-wrapper');
+  wrapper.classList.add('open');
 });
-fileDropdown.addEventListener('blur', () => {
-  dropdownWrapper.classList.remove('open');
+
+fileDropdown.addEventListener('blur', (e) => {
+  const wrapper = e.target.closest('.dropdown-wrapper');
+  wrapper.classList.remove('open');
+});
+
+clearChatBtn.addEventListener('click', () => {
+  chatWrapper.innerHTML = '';
+
+  // const placeholder = document.createElement('p');
+  // placeholder.id = 'chat-placeholder';
+  // placeholder.className = 'chat-placeholder';
+  // placeholder.textContent = 'Your chats appear here once you start conversation.';
+  // chatWrapper.appendChild(placeholder);
 });
 
 
@@ -200,18 +217,18 @@ function addMessage(text, sender) {
 
 
 // Scroll Button Visibility
-chatWrapper.addEventListener('scroll', () => {
-  if (chatWrapper.scrollTop + chatWrapper.clientHeight < chatWrapper.scrollHeight - 100) {
-    scrollBtn.style.display = 'block';
-  } else {
-    scrollBtn.style.display = 'none';
-  }
-});
+// chatWrapper.addEventListener('scroll', () => {
+//   if (chatWrapper.scrollTop + chatWrapper.clientHeight < chatWrapper.scrollHeight - 100) {
+//     scrollBtn.style.display = 'block';
+//   } else {
+//     scrollBtn.style.display = 'none';
+//   }
+// });
 
 // Scroll to Bottom
-scrollBtn.addEventListener('click', () => {
-  chatWrapper.scrollTop = chatWrapper.scrollHeight;
-});
+// scrollBtn.addEventListener('click', () => {
+//   chatWrapper.scrollTop = chatWrapper.scrollHeight;
+// });
 
 // Placeholder Bot Response Generator
 function generateBotResponse(userMsg) {
@@ -223,3 +240,79 @@ logoutBtn.addEventListener('click', function () {
   // Handle logout logic here
   alert("You have been logged out.");
 });
+
+
+
+//Modal functionalities 
+
+// Modal Elements
+const openModalBtn = document.querySelector('.upload-btn'); // existing upload label
+const modal = document.getElementById('upload-modal');
+const closeModalBtn = document.getElementById('close-modal-btn');
+const groupSelect = document.getElementById('group-select');
+const uploadBtn = document.getElementById('upload-file-btn');
+const dropZone = document.getElementById('drop-zone');
+
+// Open Modal
+openModalBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  modal.style.display = 'flex';
+  fetchGroups(); // Load groups dynamically
+});
+
+// Close Modal
+closeModalBtn.addEventListener('click', () => {
+  modal.style.display = 'none';
+  groupSelect.value = '';
+  uploadBtn.disabled = true;
+  uploadBtn.classList.remove('active');
+});
+
+// Close on Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    modal.style.display = 'none';
+  }
+});
+
+// Enable upload button on group selection
+groupSelect.addEventListener('change', () => {
+  if (groupSelect.value) {
+    uploadBtn.disabled = false;
+    uploadBtn.classList.add('active');
+  } else {
+    uploadBtn.disabled = true;
+    uploadBtn.classList.remove('active');
+  }
+});
+
+// Drop zone visual feedback (optional)
+dropZone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropZone.style.backgroundColor = '#eef';
+});
+dropZone.addEventListener('dragleave', () => {
+  dropZone.style.backgroundColor = '#f9f9f9';
+});
+dropZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropZone.style.backgroundColor = '#f9f9f9';
+  const files = e.dataTransfer.files;
+  console.log('Dropped files:', files);
+});
+
+// Simulate group fetch from API
+function fetchGroups() {
+  const dummyGroups = [
+    { id: 1, name: 'Marketing' },
+    { id: 2, name: 'Engineering' },
+    { id: 3, name: 'HR' }
+  ];
+  groupSelect.innerHTML = `<option value="" hidden>Select...</option>`;
+  dummyGroups.forEach(group => {
+    const option = document.createElement('option');
+    option.value = group.id;
+    option.textContent = group.name;
+    groupSelect.appendChild(option);
+  });
+}
