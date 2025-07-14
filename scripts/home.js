@@ -268,9 +268,16 @@ const progressBar = document.getElementById("progress-bar");
 const uploadProgress = document.getElementById("upload-progress");
 const uploadError = document.getElementById("upload-error");
 
+const confirmModal = document.getElementById("confirm-modal");
+const confirmReplaceBtn = document.getElementById("confirm-replace-btn");
+const cancelReplaceBtn = document.getElementById("cancel-replace-btn");
+
 
 let selectedFile = null;
 let uploadInterval = null;
+
+let isFileConfirmed = false;
+let existingFiles = ["Avinash_Resume.pdf", "summary.docx"]; // Simulated list of uploaded files
 
 
 // === Open Modal ===
@@ -436,46 +443,126 @@ function updateUploadButtonState() {
 
 
 // Simulated Upload Handler
+// uploadBtn.addEventListener("click", () => {
+//   if (!selectedFile) return;
+
+//   resetProgressUI();
+
+//   updateModalSubtitle('processing');
+//   uploadBtn.textContent = "Processing...";
+//   progressContainer.style.display = "block";
+
+//   // Simulate upload
+//   const total = selectedFile.size;
+//   let uploaded = 0;
+//   const chunkSize = total / 100; // simulate 100 chunks
+//   uploadInterval = setInterval(() => {
+//     // Simulate failure
+//     const simulateError = Math.random() < 0.03;
+//     if (simulateError) {
+//   clearInterval(uploadInterval);  // ✅
+//   uploadInterval = null;
+//   handleUploadError();
+//   return;
+// }
+
+//     uploaded += chunkSize;
+//     if (uploaded >= total) {
+//       uploaded = total;
+//       clearInterval(uploadInterval);
+//       uploadInterval = null;
+//       uploadBtn.textContent = "Uploaded Successfully";
+//       updateModalSubtitle('success');
+//     }
+
+//     const percent = Math.floor((uploaded / total) * 100);
+//     progressBar.style.width = `${percent}%`;
+
+//     uploadProgress.textContent = `${formatFileSize(
+//       uploaded
+//     )} / ${formatFileSize(total)}`;
+//   }, 80);
+// });
+
+
+
+//New upload button click event that checks whether a file with same name exists or not
 uploadBtn.addEventListener("click", () => {
   if (!selectedFile) return;
 
+  const selectedFileName = selectedFile.name;
+
+  // Check if file already exists (simulate check)
+  const fileExists = existingFiles.includes(selectedFileName);
+
+  if (fileExists && !isFileConfirmed) {
+    // Show confirmation modal
+    modal.style.display = "none";
+    confirmModal.style.display = "flex";
+    return;
+  }
+
+  // Proceed with upload if confirmed or file is new
+  isFileConfirmed = false;
+  beginUpload();
+});
+
+function beginUpload() {
   resetProgressUI();
 
-  updateModalSubtitle('processing');
   uploadBtn.textContent = "Processing...";
   progressContainer.style.display = "block";
 
-  // Simulate upload
   const total = selectedFile.size;
   let uploaded = 0;
-  const chunkSize = total / 100; // simulate 100 chunks
-  uploadInterval = setInterval(() => {
-    // Simulate failure
+  const chunkSize = total / 100;
+
+  if (window.uploadInterval) clearInterval(window.uploadInterval);
+
+  window.uploadInterval = setInterval(() => {
     const simulateError = Math.random() < 0.03;
     if (simulateError) {
-  clearInterval(uploadInterval);  // ✅
-  uploadInterval = null;
-  handleUploadError();
-  return;
-}
+      clearInterval(window.uploadInterval);
+      handleUploadError();
+      return;
+    }
 
     uploaded += chunkSize;
     if (uploaded >= total) {
       uploaded = total;
-      clearInterval(uploadInterval);
-      uploadInterval = null;
+      clearInterval(window.uploadInterval);
       uploadBtn.textContent = "Uploaded Successfully";
-      updateModalSubtitle('success');
+      uploadBtn.disabled = false;
+
+      // Simulate saving file to existing list
+      if (!existingFiles.includes(selectedFile.name.toLowerCase())) {
+        existingFiles.push(selectedFile.name.toLowerCase());
+      }
     }
 
     const percent = Math.floor((uploaded / total) * 100);
     progressBar.style.width = `${percent}%`;
-
-    uploadProgress.textContent = `${formatFileSize(
-      uploaded
-    )} / ${formatFileSize(total)}`;
+    uploadProgress.textContent = `${formatFileSize(uploaded)} / ${formatFileSize(total)}`;
   }, 80);
+}
+
+// Replace file
+confirmReplaceBtn.addEventListener("click", () => {
+  isFileConfirmed = true;
+  confirmModal.style.display = "none";
+  modal.style.display = "flex";
+  setTimeout(() => {
+    uploadBtn.click(); // Trigger upload again
+  }, 100); // small delay to allow modal transition
 });
+
+// Cancel replace
+cancelReplaceBtn.addEventListener("click", () => {
+  confirmModal.style.display = "none";
+  modal.style.display = "flex";
+});
+
+
 
 // Format size in MB
 function formatFileSize(bytes) {

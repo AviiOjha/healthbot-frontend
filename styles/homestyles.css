@@ -724,3 +724,40 @@
 }
 
 
+/* File already exists modal styles */
+.modal-card.small {
+  width: 400px;
+  padding: 30px;
+  text-align: center;
+}
+
+.confirm-actions {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.btn-filled {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-outlined {
+  padding: 10px 20px;
+  background-color: transparent;
+  border: 2px solid #007bff;
+  color: #007bff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-filled:hover,
+.btn-outlined:hover {
+  opacity: 0.9;
+}
+
