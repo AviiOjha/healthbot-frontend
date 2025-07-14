@@ -8,6 +8,7 @@
       href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <title>MediBot</title>
   </head>
   <body>
@@ -109,45 +110,70 @@
     <!-- Toast container -->
     <div id="toast" class="toast">File uploaded successfully</div>
 
-
     <!-- Custom Upload Modal -->
-<div id="upload-modal" class="modal-overlay">
-  <div class="modal-card">
+    <div id="upload-modal" class="modal-overlay">
+      <div class="modal-card">
+        <!-- Close Button -->
+        <button id="close-modal-btn" class="modal-close-btn">&times;</button>
 
-    <!-- Close Button -->
-    <button id="close-modal-btn" class="modal-close-btn">&times;</button>
+        <!-- Heading -->
+        <h2 class="modal-title">Upload Your File</h2>
+        <p class="modal-subtitle">
+          Please select a group to enable file upload
+        </p>
 
-    <!-- Heading -->
-    <h2 class="modal-title">Upload Your File</h2>
-    <p class="modal-subtitle">Please select a group to enable file upload</p>
+        <!-- Group Dropdown Section -->
+        <div class="form-group">
+          <label for="group-select">Select Your Group</label>
+          <select id="group-select" class="group-select">
+            <option value="" disabled hidden selected></option>
+            <!-- Populated dynamically -->
+          </select>
+        </div>
 
-    <!-- Group Dropdown -->
-    <div class="form-group">
-      <label for="group-select">Select Your Group</label>
-      <select id="group-select" class="group-dropdown">
-        <!-- Options will be loaded via JS -->
-      </select>
+        <!-- Drag & Drop Section -->
+        <div class="drop-zone" id="drop-zone">
+          <div class="file-preview" id="file-preview" style="display: none">
+            <div class="file-info">
+              <img src="assets/file-icon.png" alt="File" class="file-icon" />
+              <div class="file-details">
+                <span id="file-name">Filename</span>
+                <span id="file-size">File size</span>
+              </div>
+            </div>
+            <button id="remove-file-btn" class="remove-file-btn">
+              &times;
+            </button>
+          </div>
+
+          <!-- Progress Container -->
+          <div
+            class="progress-container"
+            id="progress-container"
+            style="display: none"
+          >
+            <div class="progress-bar" id="progress-bar"></div>
+            <div class="progress-status">
+              <span id="upload-progress">0MB / 0MB</span>
+              <span id="upload-error" class="upload-error" style="display: none">
+                <i class="fas fa-info-circle" style="color: red; margin-right: 2px;"></i>
+                Error in uploading the file</span>
+            </div>
+          </div>
+
+          <span id="drop-placeholder">Drag and drop your file here</span>
+        </div>
+
+        <p class="upload-info">
+          Maximum file size: 20 MB | Supported file type: .pdf, .doc
+        </p>
+
+        <!-- Upload Button -->
+        <button id="upload-file-btn" class="modal-upload-btn" disabled>
+          Upload File
+        </button>
+      </div>
     </div>
-
-    <!-- Drag Area -->
-    <div id="drop-zone" class="drop-zone">
-      Drag and drop your file here
-    </div>
-    <p class="file-info-text">
-      Maximum file size: 20 MB | Supported file type: .pdf, .doc
-    </p>
-
-    <!-- Upload Button -->
-    <button id="upload-file-btn" class="modal-upload-btn" disabled>
-      Upload File
-    </button>
-
-  </div>
-</div>
-
-
-
-
 
     <!-- Javascript file integration -->
     <script src="scripts/home.js"></script>

@@ -1,45 +1,47 @@
 // DOM Elements
+document.addEventListener("DOMContentLoaded", () => {
+  
 // const fileInput = document.getElementById('file-upload');
-const fileDropdown = document.getElementById('file-dropdown');
-const secondaryDropdown = document.getElementById('secondary-dropdown')
-const selectedFileName = document.getElementById('selected-file-name');
-const toast = document.getElementById('toast');
-const scrollBtn = document.getElementById('scroll-to-bottom');
-const clearChatBtn = document.getElementById('clear-chat-btn');
+const fileDropdown = document.getElementById("file-dropdown");
+const secondaryDropdown = document.getElementById("secondary-dropdown");
+const selectedFileName = document.getElementById("selected-file-name");
+const toast = document.getElementById("toast");
+const scrollBtn = document.getElementById("scroll-to-bottom");
+const clearChatBtn = document.getElementById("clear-chat-btn");
 
-const chatWrapper = document.getElementById('chat-wrapper');
-const chatInput = document.getElementById('chat-input');
-const sendBtn = document.getElementById('send-btn');
-const chatPlaceholder = document.getElementById('chat-placeholder');
+const chatWrapper = document.getElementById("chat-wrapper");
+const chatInput = document.getElementById("chat-input");
+const sendBtn = document.getElementById("send-btn");
+const chatPlaceholder = document.getElementById("chat-placeholder");
 
-const dropdownWrapper = document.querySelector('.dropdown-wrapper');
+const dropdownWrapper = document.querySelector(".dropdown-wrapper");
 
-const userAccount = document.getElementById('user-account');
-const userDropdown = document.getElementById('user-dropdown');
-const logoutBtn = document.getElementById('logout-btn');
+const userAccount = document.getElementById("user-account");
+const userDropdown = document.getElementById("user-dropdown");
+const logoutBtn = document.getElementById("logout-btn");
 
 // Toggle dropdown on click
-userAccount.addEventListener('click', function (e) {
+userAccount.addEventListener("click", function (e) {
   e.stopPropagation(); // Prevent click from bubbling to document
-  userDropdown.style.display = userDropdown.style.display === 'block' ? 'none' : 'block';
+  userDropdown.style.display =
+    userDropdown.style.display === "block" ? "none" : "block";
 });
 
 // Hide dropdown on outside click
-document.addEventListener('click', function () {
-  userDropdown.style.display = 'none';
+document.addEventListener("click", function () {
+  userDropdown.style.display = "none";
 });
 
 // Store uploaded filenames to avoid duplicates
 const uploadedFiles = new Set();
 
-// This function truncates the filename to a maximum length and adds ellipsis if needed 
+// This function truncates the filename to a maximum length and adds ellipsis if needed
 // This keeps the file name from being too long on the UI
 function truncateFileName(filename, maxLength = 20) {
   return filename.length > maxLength
-    ? filename.slice(0, maxLength - 3) + '...'
+    ? filename.slice(0, maxLength - 3) + "..."
     : filename;
 }
-
 
 // Show Toast Message on uploading or re-uploading a file
 // function showToast(message) {
@@ -49,7 +51,6 @@ function truncateFileName(filename, maxLength = 20) {
 //     toast.classList.remove('show');
 //   }, 3000);
 // }
-
 
 // File Upload Handler
 // fileInput.addEventListener('change', function () {
@@ -73,16 +74,16 @@ function truncateFileName(filename, maxLength = 20) {
 //       }
 //     });
 
-    // Show success toast message
-    // if (uploadedNames.length === 1) {
-    //   showToast(`"${uploadedNames[0]}" uploaded successfully.`);
-    // } else if (uploadedNames.length > 1) {
-      // selectedFileName.textContent = uploadedNames.join(', '); // No need because we don't want to show all the names in the selected files
-      // showToast(`${uploadedNames.length} Files Uploaded: ${uploadedNames.join(', ')}`);
-    //   showToast(`${uploadedNames.length} Files Uploaded Successfully.`);
-    // }
+// Show success toast message
+// if (uploadedNames.length === 1) {
+//   showToast(`"${uploadedNames[0]}" uploaded successfully.`);
+// } else if (uploadedNames.length > 1) {
+// selectedFileName.textContent = uploadedNames.join(', '); // No need because we don't want to show all the names in the selected files
+// showToast(`${uploadedNames.length} Files Uploaded: ${uploadedNames.join(', ')}`);
+//   showToast(`${uploadedNames.length} Files Uploaded Successfully.`);
+// }
 
-    // Show duplicate toast message(separately)
+// Show duplicate toast message(separately)
 //     if (duplicateNames.length === 1) {
 //       showToast(`"${duplicateNames[0]}" already uploaded.`);
 //     } else if (duplicateNames.length > 1) {
@@ -94,26 +95,25 @@ function truncateFileName(filename, maxLength = 20) {
 //   }
 // });
 
-
 // File Dropdown Change Handler
-fileDropdown.addEventListener('change', function () {
+fileDropdown.addEventListener("change", function () {
   selectedFileName.textContent = this.value;
-  const wrapper = e.target.closest('.dropdown-wrapper');
-  wrapper.classList.remove('open');
+  const wrapper = e.target.closest(".dropdown-wrapper");
+  wrapper.classList.remove("open");
 });
 
-fileDropdown.addEventListener('focus', (e) => {
-  const wrapper = e.target.closest('.dropdown-wrapper');
-  wrapper.classList.add('open');
+fileDropdown.addEventListener("focus", (e) => {
+  const wrapper = e.target.closest(".dropdown-wrapper");
+  wrapper.classList.add("open");
 });
 
-fileDropdown.addEventListener('blur', (e) => {
-  const wrapper = e.target.closest('.dropdown-wrapper');
-  wrapper.classList.remove('open');
+fileDropdown.addEventListener("blur", (e) => {
+  const wrapper = e.target.closest(".dropdown-wrapper");
+  wrapper.classList.remove("open");
 });
 
-clearChatBtn.addEventListener('click', () => {
-  chatWrapper.innerHTML = '';
+clearChatBtn.addEventListener("click", () => {
+  chatWrapper.innerHTML = "";
 
   // const placeholder = document.createElement('p');
   // placeholder.id = 'chat-placeholder';
@@ -122,40 +122,42 @@ clearChatBtn.addEventListener('click', () => {
   // chatWrapper.appendChild(placeholder);
 });
 
-
 // Chat Input: Enter Keypress Handler
-chatInput.addEventListener('keydown', function (e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
+chatInput.addEventListener("keydown", function (e) {
+  if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault(); // Prevents newline
     sendMessage();
   }
 });
 
 // Send Button Handler (uses same sendMessage function)
-sendBtn.addEventListener('click', sendMessage);
+sendBtn.addEventListener("click", sendMessage);
 
 // Send Message Function
 function sendMessage() {
   const message = chatInput.value.trim();
 
-    // Check if a file is selected before proceeding
-    if (!fileDropdown.value) {
-      addMessage(message, 'user');
-      addMessage("⚠️ Please upload (if not already uploaded) and select a file before asking.", 'bot');
-      chatInput.value = '';
-      return;
-    }
-    
-  if (message === '') return;
+  // Check if a file is selected before proceeding
+  if (!fileDropdown.value) {
+    addMessage(message, "user");
+    addMessage(
+      "⚠️ Please upload (if not already uploaded) and select a file before asking.",
+      "bot"
+    );
+    chatInput.value = "";
+    return;
+  }
 
-  addMessage(message, 'user');
+  if (message === "") return;
+
+  addMessage(message, "user");
 
   //Clear the input field after sending the message
-  chatInput.value = '';
+  chatInput.value = "";
 
   setTimeout(() => {
     const response = generateBotResponse(message);
-    addMessage(response, 'bot');
+    addMessage(response, "bot");
   }, 800);
 }
 
@@ -182,29 +184,32 @@ function addMessage(text, sender) {
   if (chatPlaceholder) chatPlaceholder.remove();
 
   // Wrap everything in a message container
-  const messageRow = document.createElement('div');
-  messageRow.classList.add('message-row', sender);
+  const messageRow = document.createElement("div");
+  messageRow.classList.add("message-row", sender);
 
   // Positioning wrapper for avatar + bubble
-  const messageContainer = document.createElement('div');
-  messageContainer.classList.add('message-container');
+  const messageContainer = document.createElement("div");
+  messageContainer.classList.add("message-container");
 
   // Avatar
-  const avatar = document.createElement('div');
-  avatar.classList.add('message-avatar', sender);
+  const avatar = document.createElement("div");
+  avatar.classList.add("message-avatar", sender);
 
-  if (sender === 'user') {
-    avatar.textContent = 'Y'; // Replace with dynamic initial if needed
+  if (sender === "user") {
+    avatar.textContent = "Y"; // Replace with dynamic initial if needed
   } else {
-    const img = document.createElement('img');
-    img.src = 'bot-icon.png'; // Use appropriate path
-    img.alt = 'Bot';
+    const img = document.createElement("img");
+    img.src = "bot-icon.png"; // Use appropriate path
+    img.alt = "Bot";
     avatar.appendChild(img);
   }
 
   // Bubble
-  const messageBubble = document.createElement('div');
-  messageBubble.classList.add('chat-message', sender === 'user' ? 'user-message' : 'bot-message');
+  const messageBubble = document.createElement("div");
+  messageBubble.classList.add(
+    "chat-message",
+    sender === "user" ? "user-message" : "bot-message"
+  );
   messageBubble.textContent = text;
 
   // Assemble
@@ -214,7 +219,6 @@ function addMessage(text, sender) {
   chatWrapper.appendChild(messageRow);
   chatWrapper.scrollTop = chatWrapper.scrollHeight;
 }
-
 
 // Scroll Button Visibility
 // chatWrapper.addEventListener('scroll', () => {
@@ -235,84 +239,286 @@ function generateBotResponse(userMsg) {
   return `Bot response to: "${userMsg}"`;
 }
 
-
-logoutBtn.addEventListener('click', function () {
+logoutBtn.addEventListener("click", function () {
   // Handle logout logic here
   alert("You have been logged out.");
 });
 
+//Modal functionalities
+
+// === Modal Elements ===
+const openModalBtn = document.querySelector(".upload-btn");
+const modal = document.getElementById("upload-modal");
+const closeModalBtn = document.getElementById("close-modal-btn");
+const modalSubtitle = document.querySelector('.modal-subtitle');
+
+const groupSelect = document.getElementById("group-select");
+const uploadBtn = document.getElementById("upload-file-btn");
+const dropZone = document.getElementById("drop-zone");
+const dropPlaceholder = document.getElementById("drop-placeholder");
+
+const filePreview = document.getElementById("file-preview");
+const fileNameElem = document.getElementById("file-name");
+const fileSizeElem = document.getElementById("file-size");
+const removeFileBtn = document.getElementById("remove-file-btn");
 
 
-//Modal functionalities 
+const progressContainer = document.getElementById("progress-container");
+const progressBar = document.getElementById("progress-bar");
+const uploadProgress = document.getElementById("upload-progress");
+const uploadError = document.getElementById("upload-error");
 
-// Modal Elements
-const openModalBtn = document.querySelector('.upload-btn'); // existing upload label
-const modal = document.getElementById('upload-modal');
-const closeModalBtn = document.getElementById('close-modal-btn');
-const groupSelect = document.getElementById('group-select');
-const uploadBtn = document.getElementById('upload-file-btn');
-const dropZone = document.getElementById('drop-zone');
 
-// Open Modal
-openModalBtn.addEventListener('click', (e) => {
+let selectedFile = null;
+let uploadInterval = null;
+
+
+// === Open Modal ===
+openModalBtn.addEventListener("click", (e) => {
   e.preventDefault();
-  modal.style.display = 'flex';
-  fetchGroups(); // Load groups dynamically
+  modal.style.display = "flex";
+  fetchGroups();
+  resetModalState();
 });
 
-// Close Modal
-closeModalBtn.addEventListener('click', () => {
-  modal.style.display = 'none';
-  groupSelect.value = '';
+// === Close Modal ===
+function closeModal() {
+  modal.style.display = "none";
+  resetModalState();
+}
+
+closeModalBtn.addEventListener("click", closeModal);
+
+// === Escape Closes Modal ===
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeModal();
+});
+
+// === Reset All States ===
+function resetModalState() {
+  groupSelect.selectedIndex = 0;
+  selectedFile = null;
+  updateModalSubtitle('default');
+  dropPlaceholder.textContent = "Drag and drop your file here";
+  dropZone.classList.remove("active");
+  dropZone.style.cursor = "not-allowed";
   uploadBtn.disabled = true;
-  uploadBtn.classList.remove('active');
-});
+  uploadBtn.classList.remove("active");
+}
 
-// Close on Escape key
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    modal.style.display = 'none';
-  }
-});
-
-// Enable upload button on group selection
-groupSelect.addEventListener('change', () => {
-  if (groupSelect.value) {
-    uploadBtn.disabled = false;
-    uploadBtn.classList.add('active');
-  } else {
-    uploadBtn.disabled = true;
-    uploadBtn.classList.remove('active');
-  }
-});
-
-// Drop zone visual feedback (optional)
-dropZone.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  dropZone.style.backgroundColor = '#eef';
-});
-dropZone.addEventListener('dragleave', () => {
-  dropZone.style.backgroundColor = '#f9f9f9';
-});
-dropZone.addEventListener('drop', (e) => {
-  e.preventDefault();
-  dropZone.style.backgroundColor = '#f9f9f9';
-  const files = e.dataTransfer.files;
-  console.log('Dropped files:', files);
-});
-
-// Simulate group fetch from API
+// === Populate Dropdown ===
 function fetchGroups() {
   const dummyGroups = [
-    { id: 1, name: 'Marketing' },
-    { id: 2, name: 'Engineering' },
-    { id: 3, name: 'HR' }
+    { id: 1, name: "Marketing" },
+    { id: 2, name: "Engineering" },
+    { id: 3, name: "HR" },
   ];
-  groupSelect.innerHTML = `<option value="" hidden>Select...</option>`;
-  dummyGroups.forEach(group => {
-    const option = document.createElement('option');
+  groupSelect.innerHTML = `<option value="" disabled hidden selected></option>`;
+  dummyGroups.forEach((group) => {
+    const option = document.createElement("option");
     option.value = group.id;
     option.textContent = group.name;
     groupSelect.appendChild(option);
   });
 }
+
+// === Group Selection Handler ===
+groupSelect.addEventListener("change", () => {
+  const hasGroup = groupSelect.value !== "";
+  if (hasGroup) {
+    dropZone.classList.add("active");
+    dropZone.style.cursor = "pointer";
+  } else {
+    dropZone.classList.remove("active");
+    dropZone.style.cursor = "not-allowed";
+  }
+  updateUploadButtonState();
+});
+
+// === Drag & Drop Feedback ===
+dropZone.addEventListener("dragover", (e) => {
+  if (!dropZone.classList.contains("active")) return;
+  e.preventDefault();
+  dropZone.style.backgroundColor = "#eef";
+});
+
+dropZone.addEventListener("dragleave", () => {
+  if (!dropZone.classList.contains("active")) return;
+  dropZone.style.backgroundColor = "#f0f8ff";
+});
+
+dropZone.addEventListener("drop", (e) => {
+  e.preventDefault();
+  if (!dropZone.classList.contains("active")) return;
+  dropZone.style.backgroundColor = "#f9f9f9";
+  const file = e.dataTransfer.files[0];
+  handleFileSelection(file);
+});
+
+// === Click to Browse ===
+dropZone.addEventListener("click", () => {
+  if (!dropZone.classList.contains("active") || selectedFile) return;
+  const fileInput = document.createElement("input");
+  fileInput.type = "file";
+  fileInput.accept = ".pdf,.doc,.docx";
+  fileInput.onchange = (e) => handleFileSelection(e.target.files[0]);
+  fileInput.click();
+});
+
+// === Handle File Selection ===
+function handleFileSelection(file) {
+  if (!file) return;
+  selectedFile = file;
+
+  fileNameElem.textContent = file.name;
+  fileSizeElem.textContent = formatFileSize(file.size);
+
+  dropZone.classList.add("file-selected");
+  filePreview.style.display = "flex";
+  dropPlaceholder.style.display = "none";
+
+  updateUploadButtonState();
+}
+
+// === Delete File ===
+removeFileBtn.addEventListener("click", () => {
+
+  // stop upload progress if it's running
+  if (uploadInterval) {
+    clearInterval(uploadInterval);
+    uploadInterval = null;
+  }
+
+  selectedFile = null;
+
+  // Reset drop zone visuals
+  dropZone.classList.add("active");
+  dropZone.classList.remove("file-selected");
+  dropZone.style.cursor = "pointer";
+  dropPlaceholder.style.display = "inline";
+  filePreview.style.display = "none";
+  progressContainer.style.display = "none";
+  uploadError.style.display = "none";
+
+  // Clear content
+  fileNameElem.textContent = "";
+  fileSizeElem.textContent = "";
+  progressBar.style.width = "0%";
+  uploadProgress.textContent = "";
+
+  // Reset upload button
+  uploadBtn.textContent = "Upload File";
+  uploadBtn.disabled = true;
+  uploadBtn.classList.remove("active", "error");
+
+  // Reset subtitle
+  updateModalSubtitle("default");
+});
+
+// === Format file size ===
+function formatFileSize(bytes) {
+  if (bytes < 1024) return bytes + " B";
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+  return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+}
+
+// === Update Upload Button State ===
+function updateUploadButtonState() {
+  const canUpload = selectedFile && groupSelect.value !== "";
+  if (canUpload) {
+    uploadBtn.disabled = false;
+    uploadBtn.classList.add("active");
+  } else {
+    uploadBtn.disabled = true;
+    uploadBtn.classList.remove("active");
+  }
+}
+
+
+// Simulated Upload Handler
+uploadBtn.addEventListener("click", () => {
+  if (!selectedFile) return;
+
+  resetProgressUI();
+
+  updateModalSubtitle('processing');
+  uploadBtn.textContent = "Processing...";
+  progressContainer.style.display = "block";
+
+  // Simulate upload
+  const total = selectedFile.size;
+  let uploaded = 0;
+  const chunkSize = total / 100; // simulate 100 chunks
+  uploadInterval = setInterval(() => {
+    // Simulate failure
+    const simulateError = Math.random() < 0.03;
+    if (simulateError) {
+  clearInterval(uploadInterval);  // ✅
+  uploadInterval = null;
+  handleUploadError();
+  return;
+}
+
+    uploaded += chunkSize;
+    if (uploaded >= total) {
+      uploaded = total;
+      clearInterval(uploadInterval);
+      uploadInterval = null;
+      uploadBtn.textContent = "Uploaded Successfully";
+      updateModalSubtitle('success');
+    }
+
+    const percent = Math.floor((uploaded / total) * 100);
+    progressBar.style.width = `${percent}%`;
+
+    uploadProgress.textContent = `${formatFileSize(
+      uploaded
+    )} / ${formatFileSize(total)}`;
+  }, 80);
+});
+
+// Format size in MB
+function formatFileSize(bytes) {
+  return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
+}
+
+function resetProgressUI() {
+  uploadBtn.classList.remove("error");
+  uploadBtn.disabled = true;
+  uploadError.style.display = "none";
+  progressBar.style.width = "0%";
+  progressBar.style.backgroundColor = "#007bff";
+  uploadProgress.textContent = `0MB / ${formatFileSize(selectedFile.size)}`;
+}
+
+function handleUploadError() {
+  clearInterval(uploadInterval);
+  progressBar.style.width = "100%";
+  progressBar.style.backgroundColor = "red";
+  uploadProgress.textContent = "0MB";
+  uploadError.style.display = "inline";
+  uploadBtn.textContent = "Try again";
+  uploadBtn.classList.add("error");
+  uploadBtn.disabled = false;
+  updateModalSubtitle('error');
+}
+
+
+function updateModalSubtitle(state) {
+  switch (state) {
+    case 'default':
+      modalSubtitle.textContent = 'Please select a group to enable file upload';
+      break;
+    case 'processing':
+    case 'success':
+      modalSubtitle.textContent = 'This process may take time';
+      break;
+    case 'error':
+      modalSubtitle.textContent = 'Try Again';
+      break;
+  }
+}
+
+
+
+});
