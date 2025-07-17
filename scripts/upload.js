@@ -231,7 +231,7 @@ function beginUpload() {
     }
   };
 
-  //test comment
+  //test comments
   xhr.onerror = function () {
     handleUploadError();
   };
