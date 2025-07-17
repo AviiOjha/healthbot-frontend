@@ -244,367 +244,350 @@ logoutBtn.addEventListener("click", function () {
   alert("You have been logged out.");
 });
 
-//Modal functionalities
+// //Modal functionalities
 
-// === Modal Elements ===
-const openModalBtn = document.querySelector(".upload-btn");
-const modal = document.getElementById("upload-modal");
-const closeModalBtn = document.getElementById("close-modal-btn");
-const modalSubtitle = document.querySelector('.modal-subtitle');
+// // === Modal Elements ===
+// const openModalBtn = document.querySelector(".upload-btn");
+// const modal = document.getElementById("upload-modal");
+// const closeModalBtn = document.getElementById("close-modal-btn");
+// const modalSubtitle = document.querySelector('.modal-subtitle');
 
-const groupSelect = document.getElementById("group-select");
-const uploadBtn = document.getElementById("upload-file-btn");
-const dropZone = document.getElementById("drop-zone");
-const dropPlaceholder = document.getElementById("drop-placeholder");
+// const groupSelect = document.getElementById("group-select");
+// const uploadBtn = document.getElementById("upload-file-btn");
+// const dropZone = document.getElementById("drop-zone");
+// const dropPlaceholder = document.getElementById("drop-placeholder");
 
-const filePreview = document.getElementById("file-preview");
-const fileNameElem = document.getElementById("file-name");
-const fileSizeElem = document.getElementById("file-size");
-const removeFileBtn = document.getElementById("remove-file-btn");
-
-
-const progressContainer = document.getElementById("progress-container");
-const progressBar = document.getElementById("progress-bar");
-const uploadProgress = document.getElementById("upload-progress");
-const uploadError = document.getElementById("upload-error");
-
-const confirmModal = document.getElementById("confirm-modal");
-const confirmReplaceBtn = document.getElementById("confirm-replace-btn");
-const cancelReplaceBtn = document.getElementById("cancel-replace-btn");
+// const filePreview = document.getElementById("file-preview");
+// const fileNameElem = document.getElementById("file-name");
+// const fileSizeElem = document.getElementById("file-size");
+// const removeFileBtn = document.getElementById("remove-file-btn");
 
 
-let selectedFile = null;
-let uploadInterval = null;
+// const progressContainer = document.getElementById("progress-container");
+// const progressBar = document.getElementById("progress-bar");
+// const uploadProgress = document.getElementById("upload-progress");
+// const uploadError = document.getElementById("upload-error");
 
-let isFileConfirmed = false;
-let existingFiles = ["Avinash_Resume.pdf", "summary.docx"]; // Simulated list of uploaded files
-
-
-// === Open Modal ===
-openModalBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  modal.style.display = "flex";
-  fetchGroups();
-  resetModalState();
-});
-
-// === Close Modal ===
-function closeModal() {
-  modal.style.display = "none";
-  resetModalState();
-}
-
-closeModalBtn.addEventListener("click", closeModal);
-
-// === Escape Closes Modal ===
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeModal();
-});
-
-// === Reset All States ===
-function resetModalState() {
-  groupSelect.selectedIndex = 0;
-  selectedFile = null;
-  updateModalSubtitle('default');
-  dropPlaceholder.textContent = "Drag and drop your file here";
-  dropZone.classList.remove("active");
-  dropZone.style.cursor = "not-allowed";
-  uploadBtn.disabled = true;
-  uploadBtn.classList.remove("active");
-}
-
-// === Populate Dropdown ===
-function fetchGroups() {
-  const dummyGroups = [
-    { id: 1, name: "Marketing" },
-    { id: 2, name: "Engineering" },
-    { id: 3, name: "HR" },
-  ];
-  groupSelect.innerHTML = `<option value="" disabled hidden selected></option>`;
-  dummyGroups.forEach((group) => {
-    const option = document.createElement("option");
-    option.value = group.id;
-    option.textContent = group.name;
-    groupSelect.appendChild(option);
-  });
-}
-
-// === Group Selection Handler ===
-groupSelect.addEventListener("change", () => {
-  const hasGroup = groupSelect.value !== "";
-  if (hasGroup) {
-    dropZone.classList.add("active");
-    dropZone.style.cursor = "pointer";
-  } else {
-    dropZone.classList.remove("active");
-    dropZone.style.cursor = "not-allowed";
-  }
-  updateUploadButtonState();
-});
-
-// === Drag & Drop Feedback ===
-dropZone.addEventListener("dragover", (e) => {
-  if (!dropZone.classList.contains("active")) return;
-  e.preventDefault();
-  dropZone.style.backgroundColor = "#eef";
-});
-
-dropZone.addEventListener("dragleave", () => {
-  if (!dropZone.classList.contains("active")) return;
-  dropZone.style.backgroundColor = "#f0f8ff";
-});
-
-dropZone.addEventListener("drop", (e) => {
-  e.preventDefault();
-  if (!dropZone.classList.contains("active")) return;
-  dropZone.style.backgroundColor = "#f9f9f9";
-  const file = e.dataTransfer.files[0];
-  handleFileSelection(file);
-});
-
-// === Click to Browse ===
-dropZone.addEventListener("click", () => {
-  if (!dropZone.classList.contains("active") || selectedFile) return;
-  const fileInput = document.createElement("input");
-  fileInput.type = "file";
-  fileInput.accept = ".pdf,.doc,.docx";
-  fileInput.onchange = (e) => handleFileSelection(e.target.files[0]);
-  fileInput.click();
-});
-
-// === Handle File Selection ===
-function handleFileSelection(file) {
-  if (!file) return;
-  selectedFile = file;
-
-  fileNameElem.textContent = file.name;
-  fileSizeElem.textContent = formatFileSize(file.size);
-
-  dropZone.classList.add("file-selected");
-  filePreview.style.display = "flex";
-  dropPlaceholder.style.display = "none";
-
-  updateUploadButtonState();
-}
-
-// === Delete File ===
-removeFileBtn.addEventListener("click", () => {
-
-  // stop upload progress if it's running
-  if (uploadInterval) {
-    clearInterval(uploadInterval);
-    uploadInterval = null;
-  }
-
-  selectedFile = null;
-
-  // Reset drop zone visuals
-  dropZone.classList.add("active");
-  dropZone.classList.remove("file-selected");
-  dropZone.style.cursor = "pointer";
-  dropPlaceholder.style.display = "inline";
-  filePreview.style.display = "none";
-  progressContainer.style.display = "none";
-  uploadError.style.display = "none";
-
-  // Clear content
-  fileNameElem.textContent = "";
-  fileSizeElem.textContent = "";
-  progressBar.style.width = "0%";
-  uploadProgress.textContent = "";
-
-  // Reset upload button
-  uploadBtn.textContent = "Upload File";
-  uploadBtn.disabled = true;
-  uploadBtn.classList.remove("active", "error");
-
-  // Reset subtitle
-  updateModalSubtitle("default");
-});
-
-// === Format file size ===
-function formatFileSize(bytes) {
-  if (bytes < 1024) return bytes + " B";
-  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
-  return (bytes / (1024 * 1024)).toFixed(1) + " MB";
-}
-
-// === Update Upload Button State ===
-function updateUploadButtonState() {
-  const canUpload = selectedFile && groupSelect.value !== "";
-  if (canUpload) {
-    uploadBtn.disabled = false;
-    uploadBtn.classList.add("active");
-  } else {
-    uploadBtn.disabled = true;
-    uploadBtn.classList.remove("active");
-  }
-}
+// const confirmModal = document.getElementById("confirm-modal");
+// const confirmReplaceBtn = document.getElementById("confirm-replace-btn");
+// const cancelReplaceBtn = document.getElementById("cancel-replace-btn");
 
 
-// Simulated Upload Handler
+// let selectedFile = null;
+// let uploadInterval = null;
+
+// let isFileConfirmed = false;
+// let existingFiles = ["Avinash_Resume.pdf", "summary.docx"]; // Simulated list of uploaded files
+
+
+// // === Open Modal ===
+// openModalBtn.addEventListener("click", (e) => {
+//   e.preventDefault();
+//   modal.style.display = "flex";
+//   fetchGroups();
+//   resetModalState();
+// });
+
+// // === Close Modal ===
+// function closeModal() {
+//   modal.style.display = "none";
+//   resetModalState();
+// }
+
+// closeModalBtn.addEventListener("click", closeModal);
+
+// // === Escape Closes Modal ===
+// document.addEventListener("keydown", (e) => {
+//   if (e.key === "Escape") closeModal();
+// });
+
+// // === Reset All States ===
+// function resetModalState() {
+//   groupSelect.selectedIndex = 0;
+//   selectedFile = null;
+//   updateModalSubtitle('default');
+
+//   // Drop zone reset
+//   dropPlaceholder.textContent = "Drag and drop your file here";
+//   dropPlaceholder.style.display = "inline";
+//   dropZone.classList.remove("active", "file-selected");
+//   dropZone.style.cursor = "not-allowed";
+
+//   // Hide file preview
+//   const filePreview = document.getElementById("file-preview");
+//   if (filePreview) {
+//     filePreview.style.display = "none";
+//   }
+
+//   // Hide progress bar
+//   const progressContainer = document.getElementById("progress-container");
+//   const progressBar = document.getElementById("progress-bar");
+//   const uploadProgress = document.getElementById("upload-progress");
+//   const uploadError = document.getElementById("upload-error");
+
+//   if (progressContainer && progressBar && uploadProgress && uploadError) {
+//     progressContainer.style.display = "none";
+//     progressBar.style.width = "0%";
+//     progressBar.style.backgroundColor = "#007bff";
+//     uploadProgress.textContent = "";
+//     uploadError.style.display = "none";
+//   }
+
+//   // Reset upload button
+//   uploadBtn.disabled = true;
+//   uploadBtn.classList.remove("active", "error");
+//   uploadBtn.textContent = "Upload File";
+// }
+
+
+// // === Populate Dropdown ===
+// function fetchGroups() {
+//   const dummyGroups = [
+//     { id: 1, name: "Marketing" },
+//     { id: 2, name: "Engineering" },
+//     { id: 3, name: "HR" },
+//   ];
+//   groupSelect.innerHTML = `<option value="" disabled hidden selected></option>`;
+//   dummyGroups.forEach((group) => {
+//     const option = document.createElement("option");
+//     option.value = group.id;
+//     option.textContent = group.name;
+//     groupSelect.appendChild(option);
+//   });
+// }
+
+// // === Group Selection Handler ===
+// groupSelect.addEventListener("change", () => {
+//   const hasGroup = groupSelect.value !== "";
+//   if (hasGroup) {
+//     dropZone.classList.add("active");
+//     dropZone.style.cursor = "pointer";
+//   } else {
+//     dropZone.classList.remove("active");
+//     dropZone.style.cursor = "not-allowed";
+//   }
+//   updateUploadButtonState();
+// });
+
+// // === Drag & Drop Feedback ===
+// dropZone.addEventListener("dragover", (e) => {
+//   if (!dropZone.classList.contains("active")) return;
+//   e.preventDefault();
+//   dropZone.style.backgroundColor = "#eef";
+// });
+
+// dropZone.addEventListener("dragleave", () => {
+//   if (!dropZone.classList.contains("active")) return;
+//   dropZone.style.backgroundColor = "#f0f8ff";
+// });
+
+// dropZone.addEventListener("drop", (e) => {
+//   e.preventDefault();
+//   if (!dropZone.classList.contains("active")) return;
+//   dropZone.style.backgroundColor = "#f9f9f9";
+//   const file = e.dataTransfer.files[0];
+//   handleFileSelection(file);
+// });
+
+// // === Click to Browse ===
+// dropZone.addEventListener("click", () => {
+//   if (!dropZone.classList.contains("active") || selectedFile) return;
+//   const fileInput = document.createElement("input");
+//   fileInput.type = "file";
+//   fileInput.accept = ".pdf,.doc,.docx";
+//   fileInput.onchange = (e) => handleFileSelection(e.target.files[0]);
+//   fileInput.click();
+// });
+
+// // === Handle File Selection ===
+// function handleFileSelection(file) {
+//   if (!file) return;
+//   selectedFile = file;
+
+//   fileNameElem.textContent = file.name;
+//   fileSizeElem.textContent = formatFileSize(file.size);
+
+//   dropZone.classList.add("file-selected");
+//   filePreview.style.display = "flex";
+//   dropPlaceholder.style.display = "none";
+
+//   updateUploadButtonState();
+// }
+
+// // === Delete File ===
+// removeFileBtn.addEventListener("click", () => {
+
+//   // stop upload progress if it's running
+//   if (uploadInterval) {
+//     clearInterval(uploadInterval);
+//     uploadInterval = null;
+//   }
+
+//   selectedFile = null;
+
+//   // Reset drop zone visuals
+//   dropZone.classList.add("active");
+//   dropZone.classList.remove("file-selected");
+//   dropZone.style.cursor = "pointer";
+//   dropPlaceholder.style.display = "inline";
+//   filePreview.style.display = "none";
+//   progressContainer.style.display = "none";
+//   uploadError.style.display = "none";
+
+//   // Clear content
+//   fileNameElem.textContent = "";
+//   fileSizeElem.textContent = "";
+//   progressBar.style.width = "0%";
+//   uploadProgress.textContent = "";
+
+//   // Reset upload button
+//   uploadBtn.textContent = "Upload File";
+//   uploadBtn.disabled = true;
+//   uploadBtn.classList.remove("active", "error");
+
+//   // Reset subtitle
+//   updateModalSubtitle("default");
+// });
+
+// // === Format file size ===
+// function formatFileSize(bytes) {
+//   if (bytes < 1024) return bytes + " B";
+//   if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+//   return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+// }
+
+// // === Update Upload Button State ===
+// function updateUploadButtonState() {
+//   const canUpload = selectedFile && groupSelect.value !== "";
+//   if (canUpload) {
+//     uploadBtn.disabled = false;
+//     uploadBtn.classList.add("active");
+//   } else {
+//     uploadBtn.disabled = true;
+//     uploadBtn.classList.remove("active");
+//   }
+// }
+
+
+// //New upload button click event that checks whether a file with same name exists or not
 // uploadBtn.addEventListener("click", () => {
 //   if (!selectedFile) return;
 
+//   const selectedFileName = selectedFile.name;
+
+//   // Check if file already exists (simulate check)
+//   const fileExists = existingFiles.includes(selectedFileName);
+
+//   if (fileExists && !isFileConfirmed) {
+//     // Show confirmation modal
+//     modal.style.display = "none";
+//     confirmModal.style.display = "flex";
+//     return;
+//   }
+
+//   // Proceed with upload if confirmed or file is new
+//   isFileConfirmed = false;
+//   beginUpload();
+// });
+
+// function beginUpload() {
 //   resetProgressUI();
 
-//   updateModalSubtitle('processing');
 //   uploadBtn.textContent = "Processing...";
 //   progressContainer.style.display = "block";
 
-//   // Simulate upload
 //   const total = selectedFile.size;
 //   let uploaded = 0;
-//   const chunkSize = total / 100; // simulate 100 chunks
-//   uploadInterval = setInterval(() => {
-//     // Simulate failure
+//   const chunkSize = total / 100;
+
+//   if (window.uploadInterval) clearInterval(window.uploadInterval);
+
+//   window.uploadInterval = setInterval(() => {
 //     const simulateError = Math.random() < 0.03;
 //     if (simulateError) {
-//   clearInterval(uploadInterval);  // ✅
-//   uploadInterval = null;
-//   handleUploadError();
-//   return;
-// }
+//       clearInterval(window.uploadInterval);
+//       handleUploadError();
+//       return;
+//     }
 
 //     uploaded += chunkSize;
 //     if (uploaded >= total) {
 //       uploaded = total;
-//       clearInterval(uploadInterval);
-//       uploadInterval = null;
+//       clearInterval(window.uploadInterval);
 //       uploadBtn.textContent = "Uploaded Successfully";
-//       updateModalSubtitle('success');
+//       uploadBtn.disabled = false;
+
+//       // Simulate saving file to existing list
+//       if (!existingFiles.includes(selectedFile.name.toLowerCase())) {
+//         existingFiles.push(selectedFile.name.toLowerCase());
+//       }
 //     }
 
 //     const percent = Math.floor((uploaded / total) * 100);
 //     progressBar.style.width = `${percent}%`;
-
-//     uploadProgress.textContent = `${formatFileSize(
-//       uploaded
-//     )} / ${formatFileSize(total)}`;
+//     uploadProgress.textContent = `${formatFileSize(uploaded)} / ${formatFileSize(total)}`;
 //   }, 80);
+// }
+
+// // Replace file
+// confirmReplaceBtn.addEventListener("click", () => {
+//   isFileConfirmed = true;
+//   confirmModal.style.display = "none";
+//   modal.style.display = "flex";
+//   setTimeout(() => {
+//     uploadBtn.click(); // Trigger upload again
+//   }, 100); // small delay to allow modal transition
+// });
+
+// // Cancel replace
+// cancelReplaceBtn.addEventListener("click", () => {
+//   confirmModal.style.display = "none";
+//   modal.style.display = "flex";
 // });
 
 
 
-//New upload button click event that checks whether a file with same name exists or not
-uploadBtn.addEventListener("click", () => {
-  if (!selectedFile) return;
+// // Format size in MB
+// function formatFileSize(bytes) {
+//   return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
+// }
 
-  const selectedFileName = selectedFile.name;
+// function resetProgressUI() {
+//   uploadBtn.classList.remove("error");
+//   uploadBtn.disabled = true;
+//   uploadError.style.display = "none";
+//   progressBar.style.width = "0%";
+//   progressBar.style.backgroundColor = "#007bff";
+//   uploadProgress.textContent = `0MB / ${formatFileSize(selectedFile.size)}`;
+// }
 
-  // Check if file already exists (simulate check)
-  const fileExists = existingFiles.includes(selectedFileName);
-
-  if (fileExists && !isFileConfirmed) {
-    // Show confirmation modal
-    modal.style.display = "none";
-    confirmModal.style.display = "flex";
-    return;
-  }
-
-  // Proceed with upload if confirmed or file is new
-  isFileConfirmed = false;
-  beginUpload();
-});
-
-function beginUpload() {
-  resetProgressUI();
-
-  uploadBtn.textContent = "Processing...";
-  progressContainer.style.display = "block";
-
-  const total = selectedFile.size;
-  let uploaded = 0;
-  const chunkSize = total / 100;
-
-  if (window.uploadInterval) clearInterval(window.uploadInterval);
-
-  window.uploadInterval = setInterval(() => {
-    const simulateError = Math.random() < 0.03;
-    if (simulateError) {
-      clearInterval(window.uploadInterval);
-      handleUploadError();
-      return;
-    }
-
-    uploaded += chunkSize;
-    if (uploaded >= total) {
-      uploaded = total;
-      clearInterval(window.uploadInterval);
-      uploadBtn.textContent = "Uploaded Successfully";
-      uploadBtn.disabled = false;
-
-      // Simulate saving file to existing list
-      if (!existingFiles.includes(selectedFile.name.toLowerCase())) {
-        existingFiles.push(selectedFile.name.toLowerCase());
-      }
-    }
-
-    const percent = Math.floor((uploaded / total) * 100);
-    progressBar.style.width = `${percent}%`;
-    uploadProgress.textContent = `${formatFileSize(uploaded)} / ${formatFileSize(total)}`;
-  }, 80);
-}
-
-// Replace file
-confirmReplaceBtn.addEventListener("click", () => {
-  isFileConfirmed = true;
-  confirmModal.style.display = "none";
-  modal.style.display = "flex";
-  setTimeout(() => {
-    uploadBtn.click(); // Trigger upload again
-  }, 100); // small delay to allow modal transition
-});
-
-// Cancel replace
-cancelReplaceBtn.addEventListener("click", () => {
-  confirmModal.style.display = "none";
-  modal.style.display = "flex";
-});
+// function handleUploadError() {
+//   clearInterval(uploadInterval);
+//   progressBar.style.width = "100%";
+//   progressBar.style.backgroundColor = "red";
+//   uploadProgress.textContent = "0MB";
+//   uploadError.style.display = "inline";
+//   uploadBtn.textContent = "Try again";
+//   uploadBtn.classList.add("error");
+//   uploadBtn.disabled = false;
+//   updateModalSubtitle('error');
+// }
 
 
-
-// Format size in MB
-function formatFileSize(bytes) {
-  return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
-}
-
-function resetProgressUI() {
-  uploadBtn.classList.remove("error");
-  uploadBtn.disabled = true;
-  uploadError.style.display = "none";
-  progressBar.style.width = "0%";
-  progressBar.style.backgroundColor = "#007bff";
-  uploadProgress.textContent = `0MB / ${formatFileSize(selectedFile.size)}`;
-}
-
-function handleUploadError() {
-  clearInterval(uploadInterval);
-  progressBar.style.width = "100%";
-  progressBar.style.backgroundColor = "red";
-  uploadProgress.textContent = "0MB";
-  uploadError.style.display = "inline";
-  uploadBtn.textContent = "Try again";
-  uploadBtn.classList.add("error");
-  uploadBtn.disabled = false;
-  updateModalSubtitle('error');
-}
-
-
-function updateModalSubtitle(state) {
-  switch (state) {
-    case 'default':
-      modalSubtitle.textContent = 'Please select a group to enable file upload';
-      break;
-    case 'processing':
-    case 'success':
-      modalSubtitle.textContent = 'This process may take time';
-      break;
-    case 'error':
-      modalSubtitle.textContent = 'Try Again';
-      break;
-  }
-}
+// function updateModalSubtitle(state) {
+//   switch (state) {
+//     case 'default':
+//       modalSubtitle.textContent = 'Please select a group to enable file upload';
+//       break;
+//     case 'processing':
+//     case 'success':
+//       modalSubtitle.textContent = 'This process may take time';
+//       break;
+//     case 'error':
+//       modalSubtitle.textContent = 'Try Again';
+//       break;
+//   }
+// }
 
 
 
